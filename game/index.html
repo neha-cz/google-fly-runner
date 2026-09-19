@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FlyRunner</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; background: #0b0d14; color: #e6e6ea; font: 14px/1.4 system-ui, sans-serif; }
+    #app { display: flex; gap: 16px; padding: 16px; flex-wrap: wrap; align-items: flex-start; }
+    #stage { position: relative; width: 960px; max-width: 100%; }
+    canvas#game { display: block; width: 100%; height: auto; background: #000; border-radius: 8px; box-shadow: 0 0 40px #0008; }
+    #hud { position: absolute; top: 14px; left: 14px; padding: 8px 14px; background: rgba(0,0,0,.45); border-radius: 8px; pointer-events: none; font-variant-numeric: tabular-nums; }
+    #hud-score { font-size: 24px; font-weight: 700; color: #ffd76a; text-shadow: 0 1px 2px #000; }
+    #hud-line, #hud-driver { font-size: 13px; color: #e8e2c8; }
+    #overlay { position: absolute; inset: 35% 0 auto 0; padding: 18px 0; background: rgba(0,0,0,.6); text-align: center; pointer-events: none; }
+    #overlay-title { font-size: 42px; font-weight: 800; letter-spacing: .08em; color: #fff; }
+    #overlay-sub { font-size: 16px; color: #e8e2c8; margin-top: 6px; }
+    #panel { min-width: 260px; max-width: 320px; display: flex; flex-direction: column; gap: 10px; }
+    #panel h1 { font-size: 18px; margin: 0; letter-spacing: .04em; }
+    #panel h1 small { font-weight: normal; opacity: .6; font-size: 12px; margin-left: 6px; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    label { opacity: .8; }
+    select, input, button { background: #171a26; color: #e6e6ea; border: 1px solid #2c3145; border-radius: 6px; padding: 5px 8px; font: inherit; }
+    button { cursor: pointer; } button:hover { background: #222741; }
+    .stats { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-variant-numeric: tabular-nums; }
+    .stats span:nth-child(odd) { opacity: .6; }
+    canvas#activity { width: 320px; height: 230px; border: 1px solid #2c3145; border-radius: 4px; background: #0e1018; }
+    canvas#frame { image-rendering: pixelated; width: 256px; height: 192px; border: 1px solid #2c3145; border-radius: 4px; background: #000; }
+    pre#state { font-size: 11px; line-height: 1.25; margin: 0; opacity: .8; max-height: 220px; overflow: auto; white-space: pre; }
+    .keys { opacity: .6; font-size: 12px; }
+    kbd { background: #171a26; border: 1px solid #2c3145; border-radius: 4px; padding: 0 5px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="stage">
+      <canvas id="game" width="960" height="540"></canvas>
+      <div id="hud">
+        <div id="hud-score">0</div>
+        <div id="hud-line">0 m · 0 coins · 0.0 m/s</div>
+        <div id="hud-driver">driver: human · 60 fps</div>
+      </div>
+      <div id="overlay" hidden><div id="overlay-title">GAME OVER</div><div id="overlay-sub"></div></div>
+    </div>
+    <div id="panel">
+      <h1>FlyRunner <small>connectome-driven runner testbed</small></h1>
+      <div class="row">
+        <label for="mode">Driver</label>
+        <select id="mode">
+          <option value="human">Human (keyboard)</option>
+          <option value="heuristic">Scripted heuristic</option>
+          <option value="random">Random</option>
+        </select>
+        <label for="seed">Seed</label>
+        <input id="seed" type="number" value="1" style="width:70px" />
+        <button id="restart">Restart</button>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div id="brain" hidden>
+        <div class="row"><label id="brain-label">connectome activity</label></div>
+        <canvas id="activity" width="320" height="230"></canvas>
+      </div>
+      <div>
+        <div class="row"><label>getFrame() — 64×48 retinal input</label></div>
+        <canvas id="frame" width="64" height="48"></canvas>
+      </div>
+      <div>
+        <div class="row"><label>getState() — 36 floats</label></div>
+        <pre id="state"></pre>
+      </div>
+      <div class="keys">
+        <kbd>↑</kbd>/<kbd>Space</kbd> jump · <kbd>↓</kbd> slide · <kbd>←</kbd>/<kbd>→</kbd> lane · <kbd>R</kbd> restart · <kbd>P</kbd> pause · <code>?renderer=2d</code> for the old canvas look
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/ui/main.ts"></script>
+</body>
+</html>

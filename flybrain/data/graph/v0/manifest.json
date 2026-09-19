@@ -1,0 +1,780 @@
+{
+  "version": "v0",
+  "dataset": "male-cns:v1.0",
+  "built": "2026-09-14T02:15:34-0400",
+  "flybrain_version": "0.1.0",
+  "python": "3.12.13",
+  "config": {
+    "version": "v0",
+    "dataset": "male-cns:v1.0",
+    "source": {
+      "base_url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome",
+      "files": {
+        "annotations": "body-annotations-male-cns-v1.0-minconf-0.5.feather",
+        "neurotransmitters": "body-neurotransmitters-male-cns-v1.0.feather",
+        "weights": "connectome-weights-male-cns-v1.0-minconf-0.5.feather"
+      },
+      "license": "CC BY 4.0 \u2014 FlyEM (HHMI Janelia), Univ. of Cambridge Dept. of Zoology, MRC LMB, Google Research"
+    },
+    "notes": "Regexes are matched against the MaleCNS v1.0 `type` column; resolved 2026-09-14 against the bulk annotations file. `_unclear` photoreceptor variants are deliberately excluded. Unmatched patterns fail the build. 2026-09-14 expansion after the first build pruned the CX and HS/VS as unreachable: added the anterior visual pathway (MeTu->TuBu->ER ring neurons) that feeds the compass, and the DNs that HS/VS (DNp20/15/17), looming (DNp03/35/103) and PFL3 (DNa03/DNb01) actually target, all identified from the release's own connectivity. Input layer = photoreceptors + lamina: in v1.0 R1-R6 are annotated in only ~300-520 of ~880 columns per eye and almost none near the medulla centre, so the central patch contains few of them; the lamina monopolar cells (their direct targets) carry the input, as in flyvis.",
+    "type_patterns": {
+      "photoreceptor": [
+        "^R1-R6$",
+        "^R7[dpy]$",
+        "^R8[dpy]$"
+      ],
+      "lamina": [
+        "^L[1-5]$",
+        "^C[23]$"
+      ],
+      "medulla": [
+        "^Mi1$",
+        "^Mi4$",
+        "^Mi9$",
+        "^Tm1$",
+        "^Tm2$",
+        "^Tm3$",
+        "^Tm4$",
+        "^Tm9$"
+      ],
+      "motion": [
+        "^T4[a-d]$",
+        "^T5[a-d]$"
+      ],
+      "looming": [
+        "^LC4$",
+        "^LC6$",
+        "^LPLC1$",
+        "^LPLC2$",
+        "^LC11$"
+      ],
+      "optic_flow": [
+        "^HS[ENS]$",
+        "^VS$"
+      ],
+      "anterior_visual_metu": [
+        "^MeTu[1-4][a-f]?$"
+      ],
+      "anterior_visual_tubu": [
+        "^TuBu\\d\\d$"
+      ],
+      "ring": [
+        "^ER[1-6]\\w*$",
+        "^ExR[1-8]$",
+        "^EL$"
+      ],
+      "central_complex": [
+        "^EPG$",
+        "^PEN_[ab]\\(PEN[12]\\)$",
+        "^Delta7$",
+        "^hDelta[A-M]$",
+        "^vDelta[A-M](_[ab])?$",
+        "^PFL[23]$"
+      ],
+      "descending": [
+        "^DNp01$",
+        "^DNp02$",
+        "^DNp04$",
+        "^DNp06$",
+        "^DNp09$",
+        "^DNp11$",
+        "^DNa01$",
+        "^DNa02$",
+        "^MDN$",
+        "^DNp03$",
+        "^DNp35$",
+        "^DNp103$",
+        "^DNp20$",
+        "^DNp15$",
+        "^DNp17$",
+        "^DNa03$",
+        "^DNb01$"
+      ]
+    },
+    "input_groups": [
+      "photoreceptor",
+      "lamina"
+    ],
+    "output_groups": [
+      "descending"
+    ],
+    "columnar_groups": [
+      "photoreceptor",
+      "lamina",
+      "medulla",
+      "motion",
+      "anterior_visual_metu"
+    ],
+    "require_status": [
+      "Traced"
+    ],
+    "min_synapses": 5,
+    "prune_unreachable": true,
+    "hex_radius": 3,
+    "max_neurons": 5000,
+    "status_exempt_groups": [
+      "photoreceptor"
+    ]
+  },
+  "raw_files": {
+    "body-annotations-male-cns-v1.0-minconf-0.5.feather": {
+      "key": "annotations",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/body-annotations-male-cns-v1.0-minconf-0.5.feather",
+      "size": 14483314,
+      "sha256": "2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2"
+    },
+    "body-neurotransmitters-male-cns-v1.0.feather": {
+      "key": "neurotransmitters",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/body-neurotransmitters-male-cns-v1.0.feather",
+      "size": 43282834,
+      "sha256": "95c9289220663abeb3409f3ad9e5a7f8a53f8093f5139d15502cd08da8879621"
+    },
+    "connectome-weights-male-cns-v1.0-minconf-0.5.feather": {
+      "key": "weights",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/connectome-weights-male-cns-v1.0-minconf-0.5.feather",
+      "size": 1051241946,
+      "sha256": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1"
+    }
+  },
+  "type_resolution": {
+    "^R1-R6$": {
+      "group": "photoreceptor",
+      "types": [
+        "R1-R6"
+      ]
+    },
+    "^R7[dpy]$": {
+      "group": "photoreceptor",
+      "types": [
+        "R7d",
+        "R7p",
+        "R7y"
+      ]
+    },
+    "^R8[dpy]$": {
+      "group": "photoreceptor",
+      "types": [
+        "R8d",
+        "R8p",
+        "R8y"
+      ]
+    },
+    "^L[1-5]$": {
+      "group": "lamina",
+      "types": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "^C[23]$": {
+      "group": "lamina",
+      "types": [
+        "C2",
+        "C3"
+      ]
+    },
+    "^Mi1$": {
+      "group": "medulla",
+      "types": [
+        "Mi1"
+      ]
+    },
+    "^Mi4$": {
+      "group": "medulla",
+      "types": [
+        "Mi4"
+      ]
+    },
+    "^Mi9$": {
+      "group": "medulla",
+      "types": [
+        "Mi9"
+      ]
+    },
+    "^Tm1$": {
+      "group": "medulla",
+      "types": [
+        "Tm1"
+      ]
+    },
+    "^Tm2$": {
+      "group": "medulla",
+      "types": [
+        "Tm2"
+      ]
+    },
+    "^Tm3$": {
+      "group": "medulla",
+      "types": [
+        "Tm3"
+      ]
+    },
+    "^Tm4$": {
+      "group": "medulla",
+      "types": [
+        "Tm4"
+      ]
+    },
+    "^Tm9$": {
+      "group": "medulla",
+      "types": [
+        "Tm9"
+      ]
+    },
+    "^T4[a-d]$": {
+      "group": "motion",
+      "types": [
+        "T4a",
+        "T4b",
+        "T4c",
+        "T4d"
+      ]
+    },
+    "^T5[a-d]$": {
+      "group": "motion",
+      "types": [
+        "T5a",
+        "T5b",
+        "T5c",
+        "T5d"
+      ]
+    },
+    "^LC4$": {
+      "group": "looming",
+      "types": [
+        "LC4"
+      ]
+    },
+    "^LC6$": {
+      "group": "looming",
+      "types": [
+        "LC6"
+      ]
+    },
+    "^LPLC1$": {
+      "group": "looming",
+      "types": [
+        "LPLC1"
+      ]
+    },
+    "^LPLC2$": {
+      "group": "looming",
+      "types": [
+        "LPLC2"
+      ]
+    },
+    "^LC11$": {
+      "group": "looming",
+      "types": [
+        "LC11"
+      ]
+    },
+    "^HS[ENS]$": {
+      "group": "optic_flow",
+      "types": [
+        "HSE",
+        "HSN",
+        "HSS"
+      ]
+    },
+    "^VS$": {
+      "group": "optic_flow",
+      "types": [
+        "VS"
+      ]
+    },
+    "^MeTu[1-4][a-f]?$": {
+      "group": "anterior_visual_metu",
+      "types": [
+        "MeTu1",
+        "MeTu2a",
+        "MeTu2b",
+        "MeTu3a",
+        "MeTu3b",
+        "MeTu3c",
+        "MeTu4a",
+        "MeTu4b",
+        "MeTu4c",
+        "MeTu4d",
+        "MeTu4e",
+        "MeTu4f"
+      ]
+    },
+    "^TuBu\\d\\d$": {
+      "group": "anterior_visual_tubu",
+      "types": [
+        "TuBu01",
+        "TuBu02",
+        "TuBu03",
+        "TuBu04",
+        "TuBu05",
+        "TuBu06",
+        "TuBu07",
+        "TuBu08",
+        "TuBu09",
+        "TuBu10"
+      ]
+    },
+    "^ER[1-6]\\w*$": {
+      "group": "ring",
+      "types": [
+        "ER1_a",
+        "ER1_b",
+        "ER1_c",
+        "ER2_a",
+        "ER2_b",
+        "ER2_c",
+        "ER2_d",
+        "ER3a_a",
+        "ER3a_b",
+        "ER3a_c",
+        "ER3a_d",
+        "ER3d_a",
+        "ER3d_b",
+        "ER3d_c",
+        "ER3d_d",
+        "ER3d_e",
+        "ER3m",
+        "ER3p_a",
+        "ER3p_b",
+        "ER3w_a",
+        "ER3w_b",
+        "ER3w_c",
+        "ER4d",
+        "ER4m",
+        "ER5",
+        "ER6"
+      ]
+    },
+    "^ExR[1-8]$": {
+      "group": "ring",
+      "types": [
+        "ExR1",
+        "ExR2",
+        "ExR3",
+        "ExR4",
+        "ExR5",
+        "ExR6",
+        "ExR7",
+        "ExR8"
+      ]
+    },
+    "^EL$": {
+      "group": "ring",
+      "types": [
+        "EL"
+      ]
+    },
+    "^EPG$": {
+      "group": "central_complex",
+      "types": [
+        "EPG"
+      ]
+    },
+    "^PEN_[ab]\\(PEN[12]\\)$": {
+      "group": "central_complex",
+      "types": [
+        "PEN_a(PEN1)",
+        "PEN_b(PEN2)"
+      ]
+    },
+    "^Delta7$": {
+      "group": "central_complex",
+      "types": [
+        "Delta7"
+      ]
+    },
+    "^hDelta[A-M]$": {
+      "group": "central_complex",
+      "types": [
+        "hDeltaA",
+        "hDeltaB",
+        "hDeltaC",
+        "hDeltaD",
+        "hDeltaE",
+        "hDeltaF",
+        "hDeltaG",
+        "hDeltaH",
+        "hDeltaI",
+        "hDeltaJ",
+        "hDeltaK",
+        "hDeltaL",
+        "hDeltaM"
+      ]
+    },
+    "^vDelta[A-M](_[ab])?$": {
+      "group": "central_complex",
+      "types": [
+        "vDeltaA_a",
+        "vDeltaA_b",
+        "vDeltaB",
+        "vDeltaC",
+        "vDeltaD",
+        "vDeltaE",
+        "vDeltaF",
+        "vDeltaG",
+        "vDeltaH",
+        "vDeltaI_a",
+        "vDeltaI_b",
+        "vDeltaJ",
+        "vDeltaK",
+        "vDeltaL",
+        "vDeltaM"
+      ]
+    },
+    "^PFL[23]$": {
+      "group": "central_complex",
+      "types": [
+        "PFL2",
+        "PFL3"
+      ]
+    },
+    "^DNp01$": {
+      "group": "descending",
+      "types": [
+        "DNp01"
+      ]
+    },
+    "^DNp02$": {
+      "group": "descending",
+      "types": [
+        "DNp02"
+      ]
+    },
+    "^DNp04$": {
+      "group": "descending",
+      "types": [
+        "DNp04"
+      ]
+    },
+    "^DNp06$": {
+      "group": "descending",
+      "types": [
+        "DNp06"
+      ]
+    },
+    "^DNp09$": {
+      "group": "descending",
+      "types": [
+        "DNp09"
+      ]
+    },
+    "^DNp11$": {
+      "group": "descending",
+      "types": [
+        "DNp11"
+      ]
+    },
+    "^DNa01$": {
+      "group": "descending",
+      "types": [
+        "DNa01"
+      ]
+    },
+    "^DNa02$": {
+      "group": "descending",
+      "types": [
+        "DNa02"
+      ]
+    },
+    "^MDN$": {
+      "group": "descending",
+      "types": [
+        "MDN"
+      ]
+    },
+    "^DNp03$": {
+      "group": "descending",
+      "types": [
+        "DNp03"
+      ]
+    },
+    "^DNp35$": {
+      "group": "descending",
+      "types": [
+        "DNp35"
+      ]
+    },
+    "^DNp103$": {
+      "group": "descending",
+      "types": [
+        "DNp103"
+      ]
+    },
+    "^DNp20$": {
+      "group": "descending",
+      "types": [
+        "DNp20"
+      ]
+    },
+    "^DNp15$": {
+      "group": "descending",
+      "types": [
+        "DNp15"
+      ]
+    },
+    "^DNp17$": {
+      "group": "descending",
+      "types": [
+        "DNp17"
+      ]
+    },
+    "^DNa03$": {
+      "group": "descending",
+      "types": [
+        "DNa03"
+      ]
+    },
+    "^DNb01$": {
+      "group": "descending",
+      "types": [
+        "DNb01"
+      ]
+    }
+  },
+  "nt_sign_convention": {
+    "acetylcholine": 1,
+    "gaba": -1,
+    "glutamate": -1,
+    "histamine": -1,
+    "dopamine": 0,
+    "serotonin": 0,
+    "octopamine": 0,
+    "tyramine": 0,
+    "unclear": 0,
+    "unknown": 0
+  },
+  "steps": [
+    {
+      "step": "resolve_types",
+      "types": 147,
+      "neurons": 48562
+    },
+    {
+      "step": "status_filter",
+      "dropped": 1,
+      "kept": 48561
+    },
+    {
+      "step": "load_edges",
+      "pairs_among_selected": 1252539,
+      "kept_ge_min_syn": 414631,
+      "min_synapses": 5
+    },
+    {
+      "step": "assign_columns",
+      "assigned_from_partners": 25660,
+      "columnar_without_column": 628
+    },
+    {
+      "step": "hex_patch",
+      "radius": 3,
+      "centres": {
+        "L": [
+          19.0,
+          21.0
+        ],
+        "R": [
+          19.0,
+          21.0
+        ]
+      },
+      "dropped": 44624,
+      "kept": 3937
+    },
+    {
+      "step": "prune_unreachable",
+      "inputs": 646,
+      "outputs": 46,
+      "reach_from_inputs": 3716,
+      "reach_to_outputs": 3883,
+      "kept": 3678,
+      "dropped_by_group": {
+        "looming": 123,
+        "anterior_visual_tubu": 84,
+        "motion": 29,
+        "central_complex": 8,
+        "descending": 7,
+        "optic_flow": 6,
+        "anterior_visual_metu": 1,
+        "photoreceptor": 1
+      }
+    },
+    {
+      "step": "signs",
+      "by_nt": {
+        "acetylcholine": 2825,
+        "gaba": 504,
+        "glutamate": 200,
+        "histamine": 125,
+        "octopamine": 18,
+        "dopamine": 4,
+        "serotonin": 2
+      },
+      "unsigned_edges": 3206
+    },
+    {
+      "step": "pool",
+      "pool_nodes": 261,
+      "pool_edges": 3443
+    }
+  ],
+  "summary": {
+    "n_neurons": 3678,
+    "n_edges": 69127,
+    "synapses": 1220824,
+    "n_pool_nodes": 261,
+    "n_pool_edges": 3443,
+    "neurons_by_group": {
+      "central_complex": 777,
+      "medulla": 613,
+      "looming": 589,
+      "motion": 578,
+      "lamina": 520,
+      "ring": 326,
+      "photoreceptor": 125,
+      "anterior_visual_tubu": 72,
+      "descending": 39,
+      "anterior_visual_metu": 21,
+      "optic_flow": 18
+    },
+    "neurons_by_type": {
+      "LPLC2": 185,
+      "LC11": 138,
+      "LPLC1": 134,
+      "LC4": 126,
+      "Tm3": 98,
+      "T5d": 79,
+      "T4d": 78,
+      "T5a": 78,
+      "L4": 76,
+      "L3": 74,
+      "L2": 74,
+      "Mi1": 74,
+      "Tm1": 74,
+      "C3": 74,
+      "Mi4": 74,
+      "L1": 74,
+      "Tm2": 74,
+      "Mi9": 74,
+      "Tm9": 74,
+      "C2": 74,
+      "T5b": 74,
+      "L5": 74,
+      "T4a": 72,
+      "Tm4": 71,
+      "T5c": 69,
+      "T4b": 68,
+      "vDeltaA_a": 65,
+      "T4c": 60,
+      "vDeltaM": 55,
+      "vDeltaK": 47,
+      "EPG": 46,
+      "Delta7": 42,
+      "vDeltaL": 37,
+      "R8y": 36,
+      "R7y": 35,
+      "vDeltaB": 31,
+      "vDeltaA_b": 31,
+      "hDeltaK": 30,
+      "hDeltaJ": 29,
+      "vDeltaC": 27,
+      "ER4d": 26,
+      "PFL3": 24,
+      "PEN_b(PEN2)": 22,
+      "R1-R6": 22,
+      "ER5": 21,
+      "vDeltaD": 21,
+      "ER2_c": 20,
+      "PEN_a(PEN1)": 20,
+      "hDeltaC": 20,
+      "vDeltaI_b": 20,
+      "ER3d_b": 20,
+      "hDeltaB": 19,
+      "EL": 18,
+      "ER3w_b": 18,
+      "ER3m": 18,
+      "vDeltaG": 18,
+      "vDeltaF": 18,
+      "vDeltaE": 18,
+      "TuBu09": 18,
+      "hDeltaI": 17,
+      "vDeltaI_a": 17,
+      "R7p": 16,
+      "R8p": 16,
+      "ER3a_a": 15,
+      "TuBu07": 15,
+      "ER3p_a": 14,
+      "MeTu3c": 14,
+      "ER1_b": 13,
+      "VS": 12,
+      "PFL2": 12,
+      "hDeltaA": 12,
+      "ER2_a": 12,
+      "ER4m": 11,
+      "hDeltaL": 11,
+      "ER3d_d": 11,
+      "ER1_a": 11,
+      "vDeltaJ": 11,
+      "TuBu01": 10,
+      "TuBu02": 10,
+      "TuBu10": 10,
+      "ER3d_c": 9,
+      "vDeltaH": 9,
+      "hDeltaH": 8,
+      "hDeltaM": 8,
+      "hDeltaD": 8,
+      "hDeltaG": 8,
+      "hDeltaE": 8,
+      "hDeltaF": 8,
+      "ER3d_e": 7,
+      "MeTu3b": 7,
+      "ER3d_a": 7,
+      "ER3w_a": 7,
+      "ER3w_c": 6,
+      "DNp17": 6,
+      "LC6": 6,
+      "ER3a_b": 6,
+      "ER2_d": 5,
+      "ER3a_d": 5,
+      "TuBu06": 5,
+      "ExR1": 4,
+      "ExR5": 4,
+      "MDN": 4,
+      "ExR7": 4,
+      "ER6": 4,
+      "ExR8": 4,
+      "ER2_b": 4,
+      "ExR2": 4,
+      "ER3a_c": 4,
+      "ER1_c": 4,
+      "ER3p_b": 4,
+      "TuBu08": 4,
+      "DNp01": 2,
+      "HSN": 2,
+      "HSE": 2,
+      "HSS": 2,
+      "DNp20": 2,
+      "ExR6": 2,
+      "DNp11": 2,
+      "DNp02": 2,
+      "DNp06": 2,
+      "DNp35": 2,
+      "DNp103": 2,
+      "DNa02": 2,
+      "DNa01": 2,
+      "DNb01": 2,
+      "DNp03": 2,
+      "ExR4": 2,
+      "DNa03": 2,
+      "DNp04": 2,
+      "DNp15": 2,
+      "ExR3": 2,
+      "DNp09": 1
+    }
+  },
+  "elapsed_s": 9.0
+}

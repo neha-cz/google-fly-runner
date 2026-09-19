@@ -1,0 +1,27 @@
+{
+  "name": "flyrunner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FlyRunner: an original 3-lane endless runner with a headless, deterministic engine and a programmatic action API.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "bench": "tsx src/headless/bench.ts",
+    "golden": "tsx scripts/make-golden.ts",
+    "dump-states": "tsx scripts/dump-states.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.1",
+    "@types/three": "^0.186.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "three": "^0.186.0"
+  }
+}

@@ -1,0 +1,1 @@
+"""pipeline (see package docstring)."""

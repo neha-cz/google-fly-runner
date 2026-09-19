@@ -1,0 +1,112 @@
+{
+  "version": "v0",
+  "dataset": "male-cns:v1.0",
+  "source": {
+    "base_url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome",
+    "files": {
+      "annotations": "body-annotations-male-cns-v1.0-minconf-0.5.feather",
+      "neurotransmitters": "body-neurotransmitters-male-cns-v1.0.feather",
+      "weights": "connectome-weights-male-cns-v1.0-minconf-0.5.feather"
+    },
+    "license": "CC BY 4.0 \u2014 FlyEM (HHMI Janelia), Univ. of Cambridge Dept. of Zoology, MRC LMB, Google Research"
+  },
+  "notes": "Regexes are matched against the MaleCNS v1.0 `type` column; resolved 2026-09-14 against the bulk annotations file. `_unclear` photoreceptor variants are deliberately excluded. Unmatched patterns fail the build. 2026-09-14 expansion after the first build pruned the CX and HS/VS as unreachable: added the anterior visual pathway (MeTu->TuBu->ER ring neurons) that feeds the compass, and the DNs that HS/VS (DNp20/15/17), looming (DNp03/35/103) and PFL3 (DNa03/DNb01) actually target, all identified from the release's own connectivity. Input layer = photoreceptors + lamina: in v1.0 R1-R6 are annotated in only ~300-520 of ~880 columns per eye and almost none near the medulla centre, so the central patch contains few of them; the lamina monopolar cells (their direct targets) carry the input, as in flyvis.",
+  "type_patterns": {
+    "photoreceptor": [
+      "^R1-R6$",
+      "^R7[dpy]$",
+      "^R8[dpy]$"
+    ],
+    "lamina": [
+      "^L[1-5]$",
+      "^C[23]$"
+    ],
+    "medulla": [
+      "^Mi1$",
+      "^Mi4$",
+      "^Mi9$",
+      "^Tm1$",
+      "^Tm2$",
+      "^Tm3$",
+      "^Tm4$",
+      "^Tm9$"
+    ],
+    "motion": [
+      "^T4[a-d]$",
+      "^T5[a-d]$"
+    ],
+    "looming": [
+      "^LC4$",
+      "^LC6$",
+      "^LPLC1$",
+      "^LPLC2$",
+      "^LC11$"
+    ],
+    "optic_flow": [
+      "^HS[ENS]$",
+      "^VS$"
+    ],
+    "anterior_visual_metu": [
+      "^MeTu[1-4][a-f]?$"
+    ],
+    "anterior_visual_tubu": [
+      "^TuBu\\d\\d$"
+    ],
+    "ring": [
+      "^ER[1-6]\\w*$",
+      "^ExR[1-8]$",
+      "^EL$"
+    ],
+    "central_complex": [
+      "^EPG$",
+      "^PEN_[ab]\\(PEN[12]\\)$",
+      "^Delta7$",
+      "^hDelta[A-M]$",
+      "^vDelta[A-M](_[ab])?$",
+      "^PFL[23]$"
+    ],
+    "descending": [
+      "^DNp01$",
+      "^DNp02$",
+      "^DNp04$",
+      "^DNp06$",
+      "^DNp09$",
+      "^DNp11$",
+      "^DNa01$",
+      "^DNa02$",
+      "^MDN$",
+      "^DNp03$",
+      "^DNp35$",
+      "^DNp103$",
+      "^DNp20$",
+      "^DNp15$",
+      "^DNp17$",
+      "^DNa03$",
+      "^DNb01$"
+    ]
+  },
+  "input_groups": [
+    "photoreceptor",
+    "lamina"
+  ],
+  "output_groups": [
+    "descending"
+  ],
+  "columnar_groups": [
+    "photoreceptor",
+    "lamina",
+    "medulla",
+    "motion",
+    "anterior_visual_metu"
+  ],
+  "require_status": [
+    "Traced"
+  ],
+  "min_synapses": 5,
+  "prune_unreachable": true,
+  "hex_radius": 3,
+  "max_neurons": 5000,
+  "status_exempt_groups": [
+    "photoreceptor"
+  ]
+}

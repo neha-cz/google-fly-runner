@@ -1,0 +1,50 @@
+[
+ {
+  "file": "mlp_ppo.json",
+  "name": "v2_mlp",
+  "kind": "mlp",
+  "label": "v2_mlp"
+ },
+ {
+  "file": "fly_pooled_readout.json",
+  "name": "v2_fly_readout",
+  "kind": "fly",
+  "label": "v2_fly_readout (pooled, none)"
+ },
+ {
+  "file": "mlp_ppo_75min.json",
+  "name": "v3_mlp_cont",
+  "kind": "mlp",
+  "label": "v3_mlp_cont"
+ },
+ {
+  "file": "fly_neuron_readout.json",
+  "name": "v3_fly_neuron_ro",
+  "kind": "fly",
+  "label": "v3_fly_neuron_ro (per-neuron, none)"
+ },
+ {
+  "file": "fly_neuron_distilled.json",
+  "name": "d_neuron_full",
+  "kind": "fly",
+  "label": "d_neuron_full (per-neuron, none)"
+ },
+ {
+  "file": "fly_neuron_dagger.json",
+  "name": "v6_fly_neuron_dagger",
+  "kind": "fly",
+  "label": "v6_fly_neuron_dagger (per-neuron, none)"
+ },
+ {
+  "file": "v7_shuffled_dagger.json",
+  "name": "v7_shuffled_dagger",
+  "kind": "fly",
+  "label": "v7_shuffled_dagger (per-neuron, shuffled)"
+ },
+ {
+  "file": "v7_random_dagger.json",
+  "name": "v7_random_dagger",
+  "kind": "fly",
+  "label": "v7_random_dagger (per-neuron, random)"
+ }
+]
