@@ -2,21 +2,7 @@
 
 An original 3-lane endless runner, plus an AI agent whose neural network **topology is
 constrained by the real wiring diagram of the *Drosophila melanogaster* male CNS connectome**
-(MaleCNS v1.0), trained with reinforcement learning to play it.
-
-> **What this is and isn't.** A connectome is a static structural wiring diagram: which neurons
-> synapse onto which, with how many synapses, and (where annotated) a predicted neurotransmitter
-> sign. It is not a set of trained weights and it contains no live neural dynamics. Here we freeze
-> a network's *connectivity* to a task-relevant MaleCNS subgraph, leave a small set of
-> biologically-unmeasured parameters free (per-synapse-class weight scale, per-cell-type time
-> constants and biases, plus a small readout), and optimise those with RL until the network plays
-> the game. That is an interesting, legitimate "connectome-constrained controller" experiment. It
-> is **not** a simulation of a fly's mind, and nothing about its game score says anything about
-> real fly cognition. See [DESIGN.md](DESIGN.md) for the full rationale and the controls that keep
-> the claims honest.
-
-Independent hobby/research project. Not affiliated with or endorsed by the MaleCNS authors,
-the flyvis/flybody authors, or any game studio.
+(MaleCNS v1.0), trained with reinforcement learning to play it. Hobby project, just wanted to see how far I could get with vibe-coding. 
 
 ## Layout
 
