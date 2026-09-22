@@ -9,8 +9,10 @@ constrained by the real wiring diagram of the *Drosophila melanogaster* male CNS
 - **Game / engine** — TypeScript, Vite, Vitest. Deterministic headless engine with a 36-float state API and a 64×48 software-rasterised retinal frame.
 - **Rendering** — three.js (PBR materials, shadow maps, EffectComposer bloom + colour grade), Canvas2D fallback.
 - **Art pipeline** — Higgsfield (Z Image model via `@higgsfield/cli`) for the texture and sky paintings; seamless tiling and normal/roughness maps from the Higgsfield skills' texture post-processing scripts (NumPy/Pillow).
+- **Character modelling** — Blender 5.2 (scripted via `bpy`, `game/scripts/blender_fly.py`) builds the fly and exports `public/models/fly.glb`; its named node hierarchy is animated in three.js. Human play uses a primitive-built explorer.
 - **Connectome pipeline** — Python 3.12, uv, NumPy, pandas, PyArrow; MaleCNS v1.0 bulk files.
 - **Substrate / training** — PyTorch (MLX on Apple silicon), flyvis, Gymnasium, PPO and CMA-ES.
+- **Write-up** — LaTeX via tectonic.
 
 ## The game
 
