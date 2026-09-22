@@ -2,44 +2,7 @@
 
 An original 3-lane endless runner, plus an AI agent whose neural network **topology is
 constrained by the real wiring diagram of the *Drosophila melanogaster* male CNS connectome**
-(MaleCNS v1.0), trained with reinforcement learning to play it.
-
-> **What this is and isn't.** A connectome is a static structural wiring diagram: which neurons
-> synapse onto which, with how many synapses, and (where annotated) a predicted neurotransmitter
-> sign. It is not a set of trained weights and it contains no live neural dynamics. Here we freeze
-> a network's *connectivity* to a task-relevant MaleCNS subgraph, leave a small set of
-> biologically-unmeasured parameters free (per-synapse-class weight scale, per-cell-type time
-> constants and biases, plus a small readout), and optimise those with RL until the network plays
-> the game. That is an interesting, legitimate "connectome-constrained controller" experiment. It
-> is **not** a simulation of a fly's mind, and nothing about its game score says anything about
-> real fly cognition. See [DESIGN.md](DESIGN.md) for the full rationale and the controls that keep
-> the claims honest.
-
-Independent hobby/research project. Not affiliated with or endorsed by the MaleCNS authors,
-the flyvis/flybody authors, or any game studio.
-
-## Layout
-
-```
-game/       TypeScript. The runner: deterministic headless engine + action API, canvas renderer,
-            human keyboard mode, scripted/random baseline agents, tests, throughput bench.
-flybrain/   Python 3.12 (uv). Connectome pipeline (neuPrint → versioned graph artifact),
-            connectome-constrained substrate, Gymnasium env, PPO/CMA-ES training, backend bench.
-docs/       Benchmarks, screenshots, and the two-page write-up (docs/writeup.tex → writeup.pdf; `brew install tectonic && tectonic docs/writeup.tex`).
-DESIGN.md   Design doc: subgraph selection, RL choice, MLX-vs-PyTorch decision, milestones.
-```
-
-## Status
-
-| Phase | State |
-|---|---|
-| 0 Scaffold | done |
-| 1 Runner game + action API | **done** — playable (three.js), tested, headless ≈ 2M steps/s |
-| 2 Connectome pipeline | **done** — `flybrain build-graph` → `flybrain/data/graph/v0` (3.7k neurons / 69k edges; 261-node pooled graph), fully manifested |
-| 3 Substrate | **done** — flyvis-form rate/LIF network with frozen v0 topology, state/frame encoders, linear + fixed DN readouts, shuffled/random/silenced controls, calibration sweep; 51k (pooled) / 1.5k (per-neuron) env-decisions/s on MPS |
-| 4 Training | **built, first results in** — MLP-PPO 955 m mean after 30 min (heuristic 1,209 m); pooled-graph connectome agent 49–55 m, not separable from controls beyond a free "always slide" trick (DESIGN.md §6.1); per-neuron run in progress |
-| 5 Live demo | **done** — trained agents exported to JSON and run natively in the browser (`flybrain export`), selectable next to human/heuristic/random; live connectome-activity panel (cell-type groups → DN pools → action logits) |
-| 6 Evaluation | **written up** below and in DESIGN.md §6.1 — with controls; connectome agent is a null result at this scale |
+(MaleCNS v1.0), trained with reinforcement learning to play it. Hobby project, just wanted to see how far I could get with vibe-coding. 
 
 ## Setup
 
@@ -200,54 +163,10 @@ Fixed protocol for every agent: 200 held-out seeds, greedy actions, 180 s cap (c
 | degree-preserving shuffled wiring | 6 iters | **423 m** | 306 | 0.00 |
 | random graph, same size and density | 6 iters | **465 m** | 319 | 0.00 |
 
-**What worked.** The game, its API, the two-engine parity, the connectome pipeline (reproducible
-from public files, every choice manifested), the substrate (flyvis form, trains mechanically under
-BPTT, stability boundary characterised), a PPO baseline that beats the scripted heuristic, and a
-live demo that runs both kinds of agent in the browser. The single most useful RL finding was
-diagnostic: with a −50 crash penalty and free-to-cancel actions, uniform exploration destroys the
-credit signal (a random slide undoes a jump 83 % of the time), and a no-op action prior fixed a
-~100× learning-speed problem that neither learning rate nor reward normalisation touched.
-
-**What didn't — and what then did.** The connectome-constrained agent did not learn the task by RL at this scale. On the
-pooled graph it found only the free "always slide" trick and is separable from a silenced circuit
-by that alone; sample-matched, it is ~4× behind the MLP. Training the substrate's free parameters
-did not change that. On the per-neuron graph (645 input cells, 39 DNs, 3,678 units) the readout-only
-agent learned nothing in 1 M decisions — its greedy policy is pure no-op, identical to the silenced
-control — but 1 M decisions is also well before the MLP learned anything (it was at ~130 m at
-1.2 M), so that run is under-trained rather than conclusive. Distilling the MLP's policy into the
-per-neuron agent (DESIGN.md §6.2) shows the circuit *can* carry part of it — 78 % action agreement,
-111 m with the substrate's free parameters trainable — while the pooled graph tops out at ~60 %
-agreement regardless of readout, i.e. it is a hard capacity ceiling. **DAgger** (DESIGN.md §6.4) —
-retraining on the states the student itself visits — then took the per-neuron agent to **317 m**
-(median 218, p90 739) in eight hours and was still improving; that is the agent in the demo as
-🪰 v6_fly_neuron_dagger. PPO fine-tuning from the distilled agent, by contrast, made it worse (65 m).
-
-**Does the wiring matter?** No — and this is the project's main finding (DESIGN.md §6.5). Under an
-identical DAgger protocol from scratch, a degree-preserving shuffle of the connectome reached 423 m
-and a random graph of the same size 465 m, against 188 m for the real wiring. The MaleCNS-constrained
-substrate can be trained to play, but the specific topology confers no advantage at this scale; a
-matched random graph is an easier reservoir to read a policy out of. One seed per condition.
-
-**Versus doomfly.** doomfly reported that its full-CNS ViZDoom agent failed its own visual,
-conditioning and survival gates. We get past that stage — a trained connectome agent that plays —
-but with the controls that make the result interpretable, and they say the biology is not what is
-doing the work. Fly Dino's positive result (80 cells, CEM on a 243-parameter
-readout, Chrome Dino) remains the existence proof that a small circuit + trained readout can play a
-runner; our game is harder (three obstacle classes, five actions, 15 Hz) and our readout is trained
-by PPO rather than CEM — the ES fallback in `flybrain train --algo es` is the direct replication
-we have not yet run.
-
 **Limitations.** Single machine, minutes-to-an-hour of training per run, one seed per condition,
 runs sharing CPU; the `frame` (retinotopic) input path is implemented but untrained; no human
 baseline collected yet (keyboard mode exists); no track turns. None of this says anything about
 what a real fly's brain computes.
-
-## Roadmap
-
-See [DESIGN.md](DESIGN.md) §9 for milestones and acceptance criteria. Short version: neuPrint
-subgraph artifact → flyvis-style rate substrate with frozen topology → PPO MLP baseline → PPO on
-the readout only → PPO/CMA-ES on the substrate's free parameters → shuffled-topology and
-random-graph controls → live demo with a cell-type activity panel → write-up.
 
 ## Licences and attribution
 
