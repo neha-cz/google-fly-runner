@@ -16,7 +16,7 @@ constrained by the real wiring diagram of the *Drosophila melanogaster* male CNS
 
 ## The game
 
-![FlyRunner, scripted driver on the temple causeway](docs/screenshot.png)
+![FlyRunner, scripted driver on the temple causeway](fly_runner_demo.png)
 
 A temple-ruin path through the jungle, three lanes, an explorer sprinting down it, chase camera.
 Obstacles: a fallen log (`LOW` — jump), a spiked stone beam (`HIGH` — slide), a carved stone
