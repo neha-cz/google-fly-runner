@@ -4,36 +4,13 @@ An original 3-lane endless runner, plus an AI agent whose neural network **topol
 constrained by the real wiring diagram of the *Drosophila melanogaster* male CNS connectome**
 (MaleCNS v1.0), trained with reinforcement learning to play it. Hobby project, just wanted to see how far I could get with vibe-coding. 
 
-## Setup
+## Tech stack
 
-Requirements: Node ≥ 20, [uv](https://docs.astral.sh/uv/). Tested on an Apple M5 / 32 GB.
-
-```bash
-# game
-cd game && npm install
-npm run dev          # http://localhost:5173 — play with the keyboard, or pick a scripted driver
-npm test             # engine tests incl. the golden-trajectory fixture
-npm run bench        # headless throughput
-npm run build        # static bundle in game/dist
-
-# flybrain (uv installs Python 3.12 itself; flyvis does not support 3.13+)
-cd flybrain && uv sync --extra dev
-uv run pytest
-uv run flybrain bench-backend --out ../docs/bench-backend.md
-uv run flybrain download        # MaleCNS v1.0 bulk files (~1.2 GB, public GCS bucket) + sha256 manifest
-uv run flybrain build-graph     # → data/graph/v0/{nodes,edges,pool_nodes,pool_edges}.parquet + manifest.json (12 s)
-uv run flybrain graph-report    # per-type table, degrees, memory estimate
-(cd ../game && npm run dump-states)   # 20k game states for calibration → flybrain/data/cache
-uv run flybrain calibrate [--per-neuron] [--dynamics lif]   # input-gain × synapse-scale sweep → data/graph/v0/calibration_*.json
-uv run flybrain bench-substrate                              # fwd+bwd throughput of the real substrate
-uv run flybrain eval --agent heuristic                       # scripted / random baselines on 200 held-out seeds
-uv run flybrain train --name mlp --agent mlp --minutes 15                        # PPO MLP baseline
-uv run flybrain train --name fly_ro --agent fly --graph pooled --stage readout   # connectome, substrate frozen
-uv run flybrain train --name fly --agent fly --graph pooled --stage full --scale-max 8   # + substrate free params
-uv run flybrain train --name ctl --agent fly --control shuffled|random|silenced  # controls, same code path
-uv run flybrain eval --run runs/fly                          # held-out evaluation → runs/fly/eval.json
-uv run flybrain export --run runs/fly                        # → ../game/public/agents/fly.json (+ index.json) for the live demo
-```
+- **Game / engine** — TypeScript, Vite, Vitest. Deterministic headless engine with a 36-float state API and a 64×48 software-rasterised retinal frame.
+- **Rendering** — three.js (PBR materials, shadow maps, EffectComposer bloom + colour grade), Canvas2D fallback.
+- **Art pipeline** — Higgsfield (Z Image model via `@higgsfield/cli`) for the texture and sky paintings; seamless tiling and normal/roughness maps from the Higgsfield skills' texture post-processing scripts (NumPy/Pillow).
+- **Connectome pipeline** — Python 3.12, uv, NumPy, pandas, PyArrow; MaleCNS v1.0 bulk files.
+- **Substrate / training** — PyTorch (MLX on Apple silicon), flyvis, Gymnasium, PPO and CMA-ES.
 
 ## The game
 
@@ -87,6 +64,37 @@ records reference trajectories that the TypeScript engine and the planned NumPy 
 
 Headless throughput on the M5 (single Node process): ~4.2M steps/s bare, ~2.0M with the scripted
 agent + `getState()`, ~50k with `getFrame()`.
+
+## Setup
+
+Requirements: Node ≥ 20, [uv](https://docs.astral.sh/uv/). Tested on an Apple M5 / 32 GB.
+
+```bash
+# game
+cd game && npm install
+npm run dev          # http://localhost:5173 — play with the keyboard, or pick a scripted driver
+npm test             # engine tests incl. the golden-trajectory fixture
+npm run bench        # headless throughput
+npm run build        # static bundle in game/dist
+
+# flybrain (uv installs Python 3.12 itself; flyvis does not support 3.13+)
+cd flybrain && uv sync --extra dev
+uv run pytest
+uv run flybrain bench-backend --out ../docs/bench-backend.md
+uv run flybrain download        # MaleCNS v1.0 bulk files (~1.2 GB, public GCS bucket) + sha256 manifest
+uv run flybrain build-graph     # → data/graph/v0/{nodes,edges,pool_nodes,pool_edges}.parquet + manifest.json (12 s)
+uv run flybrain graph-report    # per-type table, degrees, memory estimate
+(cd ../game && npm run dump-states)   # 20k game states for calibration → flybrain/data/cache
+uv run flybrain calibrate [--per-neuron] [--dynamics lif]   # input-gain × synapse-scale sweep → data/graph/v0/calibration_*.json
+uv run flybrain bench-substrate                              # fwd+bwd throughput of the real substrate
+uv run flybrain eval --agent heuristic                       # scripted / random baselines on 200 held-out seeds
+uv run flybrain train --name mlp --agent mlp --minutes 15                        # PPO MLP baseline
+uv run flybrain train --name fly_ro --agent fly --graph pooled --stage readout   # connectome, substrate frozen
+uv run flybrain train --name fly --agent fly --graph pooled --stage full --scale-max 8   # + substrate free params
+uv run flybrain train --name ctl --agent fly --control shuffled|random|silenced  # controls, same code path
+uv run flybrain eval --run runs/fly                          # held-out evaluation → runs/fly/eval.json
+uv run flybrain export --run runs/fly                        # → ../game/public/agents/fly.json (+ index.json) for the live demo
+```
 
 ## The connectome subgraph
 
