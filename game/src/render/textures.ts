@@ -48,27 +48,3 @@ export function sparkTexture(): THREE.CanvasTexture {
     ctx.fillStyle = g; ctx.fillRect(0, 0, 32, 32);
   });
 }
-
-/** Translucent fly wing with dark veins; alpha carries the wing outline. Root at the left edge. */
-export function wingTexture(): THREE.CanvasTexture {
-  return canvasTexture(256, 128, ctx => {
-    ctx.clearRect(0, 0, 256, 128);
-    ctx.beginPath(); ctx.moveTo(4, 64);
-    ctx.bezierCurveTo(60, 4, 200, 6, 250, 50); ctx.bezierCurveTo(240, 100, 120, 126, 40, 96); ctx.bezierCurveTo(20, 88, 8, 78, 4, 64); ctx.closePath();
-    const g = ctx.createLinearGradient(0, 0, 256, 0); g.addColorStop(0, "rgba(225,235,255,0.7)"); g.addColorStop(1, "rgba(200,220,255,0.45)");
-    ctx.fillStyle = g; ctx.fill();
-    ctx.strokeStyle = "rgba(60,50,40,0.85)"; ctx.lineWidth = 2; ctx.stroke();
-    ctx.lineWidth = 1.3;
-    for (const [x1, y1, x2, y2] of [[4, 64, 250, 50], [4, 64, 200, 22], [4, 64, 230, 84], [30, 60, 150, 112], [90, 40, 120, 90], [150, 30, 175, 96]]) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
-  });
-}
-
-/** Banded fly abdomen: dark chitin with lighter tan stripes running around the body. */
-export function abdomenTexture(): THREE.CanvasTexture {
-  return canvasTexture(64, 128, ctx => {
-    const r = noise(9);
-    ctx.fillStyle = "#3a2a18"; ctx.fillRect(0, 0, 64, 128);
-    for (let y = 22; y < 118; y += 20) { ctx.fillStyle = "#6e5230"; ctx.fillRect(0, y, 64, 8); ctx.fillStyle = "#1f1409"; ctx.fillRect(0, y + 8, 64, 3); }
-    ctx.fillStyle = "rgba(0,0,0,0.25)"; for (let i = 0; i < 60; i++) ctx.fillRect(r() * 64, r() * 128, 1, 2 + r() * 3);
-  });
-}

@@ -35,6 +35,16 @@ uv run flybrain eval --run runs/fly                          # held-out evaluati
 uv run flybrain export --run runs/fly                        # → ../game/public/agents/fly.json (+ index.json) for the live demo
 ```
 
+## Tech stack
+
+- **Game / engine** — TypeScript, Vite, Vitest. Deterministic headless engine with a 36-float state API and a 64×48 software-rasterised retinal frame.
+- **Rendering** — three.js (PBR materials, shadow maps, EffectComposer bloom + colour grade), Canvas2D fallback.
+- **Art pipeline** — Higgsfield (Z Image model via `@higgsfield/cli`) for the texture and sky paintings; seamless tiling and normal/roughness maps from the Higgsfield skills' texture post-processing scripts (NumPy/Pillow).
+- **Character modelling** — Blender 5.2 (scripted via `bpy`, `game/scripts/blender_fly.py`) builds the fly and exports `public/models/fly.glb`; its named node hierarchy is animated in three.js. Human play uses a primitive-built explorer.
+- **Connectome pipeline** — Python 3.12, uv, NumPy, pandas, PyArrow; MaleCNS v1.0 bulk files.
+- **Substrate / training** — PyTorch (MLX on Apple silicon), flyvis, Gymnasium, PPO and CMA-ES.
+- **Write-up** — LaTeX via tectonic.
+
 ## The game
 
 ![FlyRunner, scripted driver on the temple causeway](docs/screenshot.png)
@@ -44,7 +54,7 @@ Obstacles: a fallen log (`LOW` — jump), a spiked stone beam (`HIGH` — slide)
 block (`FULL` — change lane). Gold coins are pickups. Speed ramps with distance and is capped.
 The track generator always leaves a way through.
 
-Rendered with three.js: procedural geometry dressed in AI-generated PBR texture sets
+Rendered with three.js: a Blender-modelled fly (or a primitive explorer for human play) on procedural geometry dressed in AI-generated PBR texture sets
 (`game/public/textures/`, made with Higgsfield's Z Image model and post-processed into seamless
 tiles with normal/roughness maps), real-time sun shadows, a painted jungle sky backdrop, bloom and
 a colour grade. The renderer is purely cosmetic; the engine and the agents never see it. A 2D

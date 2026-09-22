@@ -8,7 +8,7 @@ import { type Snapshot, type Obstacle, type Coin, ObstacleKind, LANE_X, OBSTACLE
 import { Assets } from "./assets";
 import { logEndTexture, leafSpriteTexture, sparkTexture } from "./textures";
 import { Explorer, type Pose } from "./explorer";
-import { Fly } from "./fly";
+import { FlyModel } from "./fly-model";
 
 const SEG = 6;             // length of one recycled wall/jungle segment
 const SEGS = 22;           // segments kept alive per side (covers ~130 units ahead)
@@ -50,7 +50,7 @@ export class ThreeRenderer implements GameRenderer {
   private sunRig = new THREE.Group();
   private sky!: THREE.Mesh;
   private segments: THREE.Group[] = [];
-  private explorer = new Explorer(); private fly = new Fly();   // human drives the explorer, agents drive the fly
+  private explorer = new Explorer(); private fly = new FlyModel();   // human drives the explorer, agents drive the fly
   private shadowBlob: THREE.Mesh;
   private obstacleMeshes = new WeakMap<Obstacle, THREE.Group>();
   private coinMeshes = new WeakMap<Coin, THREE.Mesh>();
