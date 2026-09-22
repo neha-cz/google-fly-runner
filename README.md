@@ -74,15 +74,18 @@ uv run flybrain export --run runs/fly                        # → ../game/publi
 
 ## The game
 
-![FlyRunner, scripted driver approaching a log](docs/screenshot.png)
+![FlyRunner, scripted driver on the temple causeway](docs/screenshot.png)
 
 A temple-ruin path through the jungle, three lanes, an explorer sprinting down it, chase camera.
 Obstacles: a fallen log (`LOW` — jump), a spiked stone beam (`HIGH` — slide), a carved stone
 block (`FULL` — change lane). Gold coins are pickups. Speed ramps with distance and is capped.
 The track generator always leaves a way through.
 
-Rendered with three.js from procedural geometry and canvas-painted textures — no external
-assets. A 2D canvas fallback (`?renderer=2d`) kicks in if WebGL is unavailable.
+Rendered with three.js: procedural geometry dressed in AI-generated PBR texture sets
+(`game/public/textures/`, made with Higgsfield's Z Image model and post-processed into seamless
+tiles with normal/roughness maps), real-time sun shadows, a painted jungle sky backdrop, bloom and
+a colour grade. The renderer is purely cosmetic; the engine and the agents never see it. A 2D
+canvas fallback (`?renderer=2d`) kicks in if WebGL is unavailable.
 
 Keys: `↑`/`Space` jump · `↓` slide · `←`/`→` lane · `R` restart · `P` pause.
 
