@@ -122,21 +122,6 @@ synapse scales); an OpenAI-style evolution strategy is the gradient-free fallbac
 always the same: 200 held-out seeds, greedy actions, 180 s cap, distance distribution and
 survival-to-cap rate.
 
-## Live demo
-
-![connectome driver with the activity panel](docs/demo-fly-panel.png)
-
-`flybrain export --run runs/<name>` writes a JSON bundle (weights, the frozen edge list with
-effective signed weights, per-node time constants, encoder/readout, and a PyTorch self-test block)
-to `game/public/agents/`. The browser runtime in `game/src/agents/neural.ts` executes it directly —
-the pooled substrate is a 261-node recurrence and the per-neuron one a 69k-edge sparse update, both
-cheap at 15 Hz — so the demo stays a static page with no Python server. `npm test` replays every
-bundle's self-test and requires the JS logits to match PyTorch to 1e-3. Exported agents appear in
-the Driver menu (🤖 MLP, 🪰 connectome) next to human, heuristic and random; for connectome drivers
-a panel shows the window-mean activity per cell-type group in anatomical order, the descending-
-neuron pools the readout sees (left/right coloured), and the five action logits with the chosen
-one highlighted.
-
 ## Results (2026-09-14)
 
 Fixed protocol for every agent: 200 held-out seeds, greedy actions, 180 s cap (cap distance
